@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="torch.cuda")
+
 import os
 import cv2
 import torch
@@ -10,14 +13,6 @@ from rich_argparse import RichHelpFormatter
 import sys
 from utils import (loadEfficientSAM,loadYoloWorld,
                     imgProcessor,vidProcessor)
-
-
-# setting the device
-DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-# getting the models
-efficient_sam_model = loadEfficientSAM.loadSAM(device=DEVICE)
-yoloWorld_model = loadYoloWorld.loadYOLOWorld()
 
 
 def showTable(
@@ -143,6 +138,14 @@ if __name__=='__main__':
     categories = [item.strip() for item in categories]
 
     checkExt = checkImgVid(path=path) # checking if the path is a image or not
+
+    # setting the device
+    DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    # getting the models
+    efficient_sam_model = loadEfficientSAM.loadSAM(device=DEVICE)
+    yoloWorld_model = loadYoloWorld.loadYOLOWorld()
+
 
     # running imgProcess for img and vidProcess for video
     if(checkExt=='img'):

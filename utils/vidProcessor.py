@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="torch.cuda")
+
 import torch
 import numpy as np
 import cv2
@@ -10,6 +13,7 @@ from rich.text import Text
 from rich.console import Console
 from rich import print
 import os
+
 
 def RemoveVidBG(
   input_video: str,

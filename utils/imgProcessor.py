@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="torch.cuda")
+
 import torch
 import numpy as np
 import cv2
@@ -8,6 +11,16 @@ from typing import List
 from rich.console import Console
 from rich import print
 import os
+import pkg_resources
+
+
+# checking for installed package
+def is_package_installed(name):
+  try:
+    pkg_resources.get_distribution(name)
+    return True
+  except pkg_resources.DistributionNotFound:
+    return False
 
 
 # transparency function
@@ -54,10 +67,24 @@ def RemoveImgBG(
 
     # setting a wait spinner
     console = Console()
-    with console.status("[bold green]Removing Image Background...[/bold green] :hourglass:",spinner='aesthetic') as status:
 
-        # set classes for yoloworld model
-        yolo_world_model.set_classes(categories)
+    """
+        Checking if clip is downladed by the ultralytics.
+        It will download it in first run.
+        Therefore loading it before status bar.
+        Otherwise terminal printing will get messy.
+    """
+    package_value = is_package_installed('clip')
+    if not package_value:
+      # set classes for yoloworld model
+      yolo_world_model.set_classes(categories)
+
+    with console.status("[bold green]Removing Image Background...[/bold green] :hourglass:",spinner='aesthetic') as status:
+        # it will work after first run. Now console print won't get messy
+        if package_value:
+            # set classes for yoloworld model
+            yolo_world_model.set_classes(categories)
+        
         # predict
         results = yolo_world_model.predict(input_image, conf=confidence_threshold,verbose=False)
 

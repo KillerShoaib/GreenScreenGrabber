@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="torch.cuda")
+
 import numpy as np
 import torch
 from torchvision.transforms import ToTensor

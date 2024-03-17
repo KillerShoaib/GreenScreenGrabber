@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="torch.cuda")
+
 from utils.SAMDownloader import downloadWeights
 import torch
 import numpy as np
